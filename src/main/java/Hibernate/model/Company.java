@@ -11,8 +11,8 @@ import java.util.Set;
 @NoArgsConstructor
 @ToString(exclude = {"customers", "developers", "projects"})
 @EqualsAndHashCode(exclude = {"customers", "developers", "projects"})
-@Entity(name = "companies")
-public class Companies implements BaseModel {
+@Entity(name = "company")
+public class Company implements BaseModel {
 
     private static final long serialVersionUID = 1L;
 
@@ -29,15 +29,14 @@ public class Companies implements BaseModel {
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(
-            name = "companies_and_customers",
+            name = "company_and_customer",
             joinColumns = {@JoinColumn(name = "company_id")},
-            inverseJoinColumns = {@JoinColumn(name = "customer_id")}
-    )
-    private Set<Customers> customers;
+            inverseJoinColumns = {@JoinColumn(name = "customer_id")})
+    private Set<Customer> customers;
 
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Developers> developers;
+    private Set<Developer> developers;
 
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Projects> projects;
+    private Set<Project> projects;
 }

@@ -11,8 +11,8 @@ import java.util.Set;
 @NoArgsConstructor
 @ToString(exclude = {"companies", "projects"})
 @EqualsAndHashCode(exclude = {"companies", "projects"})
-@Entity(name = "customers")
-public class Customers implements BaseModel {
+@Entity(name = "customer")
+public class Customer implements BaseModel {
 
     private static final long serialVersionUID = 1L;
 
@@ -28,8 +28,8 @@ public class Customers implements BaseModel {
     private String ownerName;
 
     @ManyToMany(mappedBy = "customers")
-    private Set<Companies> companies;
+    private Set<Company> companies;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Projects> projects;
+    private Set<Project> projects;
 }

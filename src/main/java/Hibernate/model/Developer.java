@@ -11,8 +11,8 @@ import java.util.Set;
 @NoArgsConstructor
 @ToString(exclude = {"company", "projects", "skills"})
 @EqualsAndHashCode(exclude = {"company", "projects", "skills"})
-@Entity(name = "developers")
-public class Developers implements BaseModel {
+@Entity(name = "developer")
+public class Developer implements BaseModel {
 
     private static final long serialVersionUID = 1L;
 
@@ -38,21 +38,19 @@ public class Developers implements BaseModel {
 
     @ManyToOne
     @JoinColumn(name = "company_id")
-    private Companies company;
+    private Company company;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(
-            name = "developers_and_projects",
+            name = "developer_and_project",
             joinColumns = {@JoinColumn(name = "developer_id")},
-            inverseJoinColumns = {@JoinColumn(name = "project_id")}
-    )
-    private Set<Projects> projects;
+            inverseJoinColumns = {@JoinColumn(name = "project_id")})
+    private Set<Project> projects;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(
-            name = "developers_and_skills",
+            name = "developer_and_skill",
             joinColumns = {@JoinColumn(name = "developer_id")},
-            inverseJoinColumns = {@JoinColumn(name = "skill_id")}
-    )
-    private Set<Skills> skills;
+            inverseJoinColumns = {@JoinColumn(name = "skill_id")})
+    private Set<Skill> skills;
 }

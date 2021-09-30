@@ -10,13 +10,13 @@
         <property name="connection.password">R_O_A_D_1_8_N_int_123</property>
 
         <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
-        <property name="hibernate.hbm2dll.auto">create</property>
+        <property name="hibernate.hbm2ddl.auto">update</property>
         <property name="hibernate.show_sql">true</property>
 
-        <mapping class="Hibernate.model.Companies"/>
-        <mapping class="Hibernate.model.Customers"/>
-        <mapping class="Hibernate.model.Developers"/>
-        <mapping class="Hibernate.model.Projects"/>
-        <mapping class="Hibernate.model.Skills"/>
+        <mapping class="Hibernate.model.Company"/>
+        <mapping class="Hibernate.model.Customer"/>
+        <mapping class="Hibernate.model.Developer"/>
+        <mapping class="Hibernate.model.Project"/>
+        <mapping class="Hibernate.model.Skill"/>
     </session-factory>
 </hibernate-configuration>

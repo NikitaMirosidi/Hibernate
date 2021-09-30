@@ -11,8 +11,8 @@ import java.util.Set;
 @NoArgsConstructor
 @ToString(exclude = "developers")
 @EqualsAndHashCode(exclude = "developers")
-@Entity(name = "skills")
-public class Skills implements BaseModel {
+@Entity(name = "skill")
+public class Skill implements BaseModel {
 
     private static final long serialVersionUID = 1L;
 
@@ -28,5 +28,5 @@ public class Skills implements BaseModel {
     private String level;
 
     @ManyToMany(mappedBy = "skills")
-    private Set<Developers> developers;
+    private Set<Developer> developers;
 }

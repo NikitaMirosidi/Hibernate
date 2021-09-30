@@ -11,8 +11,8 @@ import java.util.Set;
 @NoArgsConstructor
 @ToString(exclude = {"company", "customer", "developers"})
 @EqualsAndHashCode(exclude = {"company", "customer", "developers"})
-@Entity(name = "projects")
-public class Projects implements BaseModel {
+@Entity(name = "project")
+public class Project implements BaseModel {
 
     private static final long serialVersionUID = 1L;
 
@@ -32,12 +32,12 @@ public class Projects implements BaseModel {
 
     @ManyToOne
     @JoinColumn(name = "company_id")
-    private Companies company;
+    private Company company;
 
     @ManyToOne
     @JoinColumn(name = "customer_id")
-    private Customers customer;
+    private Customer customer;
 
     @ManyToMany(mappedBy = "projects")
-    private Set<Developers> developers;
+    private Set<Developer> developers;
 }
