@@ -1,42 +1,31 @@
 package Hibernate;
 
-import Hibernate.config.HibernateSessionFactory;
-import Hibernate.model.Company;
-import lombok.SneakyThrows;
-import org.hibernate.Session;
+import Hibernate.controller.MainController;
+import Hibernate.model.*;
+import Hibernate.repository.CustomRepository;
+
+import java.util.List;
 
 public class Main {
 
-    @SneakyThrows
     public static void main(String[] args) {
 
-        Company company1 = Company.builder()
-                .id(1)
-                .name("Company")
-                .registrationCountry("Ukraine")
-                .build();
+        new MainController().userInterface();
+        //SessionFactory sessionFactory = HibernateSessionFactory.getSessionFactory();
+        /*CustomRepository customRepository = new CustomRepository();
+        int graphic_design_tools = customRepository.getProjectsDevsSalary("Graphic Design Tools");
+        System.out.println(graphic_design_tools);
 
-        Company company2 = Company.builder()
-                .id(3)
-                .name("Company2")
-                .registrationCountry("Ukraine")
-                .build();
+        List<Developer> graphic_design_tools1 = customRepository.getDevsByProject("Graphic Design Tools");
+        System.out.println(graphic_design_tools1);
 
-        Session session = HibernateSessionFactory.getSessionFactory().openSession();
-        session.beginTransaction();
+        List<Developer> java = customRepository.getDevsByLanguage("Java");
+        System.out.println(java);
 
-        session.save(company1);
-        session.save(company2);
+        List<Developer> middle = customRepository.getDevsByLevel("Middle");
+        System.out.println(middle);
 
-
-
-        session.getTransaction().commit();
-        session.close();
-
-        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-
-
-
-
+        List<String> projects = customRepository.getProjectsFormatted();
+        System.out.println(projects);*/
     }
 }

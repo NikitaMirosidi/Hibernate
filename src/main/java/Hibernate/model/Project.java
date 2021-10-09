@@ -11,7 +11,8 @@ import java.util.Set;
 @NoArgsConstructor
 @ToString(exclude = {"company", "customer", "developers"})
 @EqualsAndHashCode(exclude = {"company", "customer", "developers"})
-@Entity(name = "project")
+@Entity
+@Table(name = "project")
 public class Project implements BaseModel {
 
     private static final long serialVersionUID = 1L;
