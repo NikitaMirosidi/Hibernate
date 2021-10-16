@@ -3,16 +3,23 @@ package Hibernate.repository;
 import Hibernate.config.HibernateSessionFactory;
 import Hibernate.model.BaseModel;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.SneakyThrows;
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 
+import javax.persistence.Column;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 import java.io.Closeable;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class BaseRepositoryImpl<T extends BaseModel> implements BaseRepository<T>, Closeable {
 
@@ -49,6 +56,25 @@ public class BaseRepositoryImpl<T extends BaseModel> implements BaseRepository<T
         closeSession(session);
 
         return model;
+    }
+
+    @SneakyThrows
+    @Override
+    public T getByIdUnproxy(int id) {
+
+        Session session = beginSession();
+        T t = session.get(MODEL_CLASS, id);
+        List<Field> collect = Arrays.stream(MODEL_CLASS.getDeclaredFields())
+                .filter(e -> !Modifier.isStatic(e.getModifiers()))
+                .filter(e -> !e.isAnnotationPresent(Column.class))
+                .collect(Collectors.toList());
+        for(Field field: collect) {
+            field.setAccessible(true);
+            Hibernate.initialize(field.get(t));
+        }
+        closeSession(session);
+
+        return t;
     }
 
     @Override

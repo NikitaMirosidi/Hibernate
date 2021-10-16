@@ -1,7 +1,10 @@
 package Hibernate.util;
 
 import Hibernate.model.BaseModel;
+import Hibernate.repository.BaseRepository;
+import Hibernate.repository.RepositoryCreator;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.SneakyThrows;
 import org.reflections.Reflections;
 
 import javax.persistence.Column;
@@ -14,8 +17,9 @@ import java.util.stream.Collectors;
 
 public class ModelCreator {
 
-    private final static ObjectMapper MAPPER = new ObjectMapper();
+    //private final static ObjectMapper MAPPER = new ObjectMapper();
 
+    @SneakyThrows
     public static <T extends BaseModel> T create(Class<T> modelClass, Scanner scanner, String purpose, boolean isSimple) {
 
         System.out.println("Создание объекта типа " + modelClass.getSimpleName() + ":");
@@ -43,15 +47,55 @@ public class ModelCreator {
                 .collect(Collectors.toList());
 
         if(isSimple) {
+            System.out.println("1 - выбрать объект из базы\n" +
+                    "2 - создать новый объект");
+            String choice = scanner.nextLine();
 
-            objectMap.putAll(simpleFields(simpleFields, scanner));
+            switch (choice) {
+                case "1":
+                    return getFromBase(modelClass, scanner);
+                case "2":
+                    objectMap.putAll(simpleFields(simpleFields, scanner));
+                    break;
+                default:
+                    System.out.println("Поддерживаемая функция не выбрана\n" +
+                            "Попробуйте еще раз\n");
+                    break;
+            }
         }
         else {
             objectMap.putAll(simpleFields(simpleFields, scanner));
             objectMap.putAll(relationFields(relationFields, scanner));
         }
 
-        return MAPPER.convertValue(objectMap, modelClass);
+        T model = modelClass.getDeclaredConstructor().newInstance();
+        if(purpose.equals("save")) {
+            List<Field> fieldsNoId = fields.stream()
+                    .filter(f -> !f.isAnnotationPresent(Id.class))
+                    .collect(Collectors.toList());
+            for (Field field : fieldsNoId) {
+                field.setAccessible(true);
+                field.set(model, objectMap.get(field.getName()));
+            }
+        }
+        if(purpose.equals("update")) {
+            for (Field field : fields) {
+                field.setAccessible(true);
+                field.set(model, objectMap.get(field.getName()));
+            }
+        }
+        return model;
+        //return MAPPER.convertValue(objectMap, modelClass);
+    }
+
+    @SneakyThrows
+    private static <T extends BaseModel> T getFromBase(Class<T> modelClass, Scanner scanner) {
+
+        BaseRepository<T> of = RepositoryCreator.of(modelClass);
+        System.out.println("Объекты имеющиеся в базе:\n" + of.getAll());
+        int id = getInt("ID",scanner);
+
+        return of.getByIdUnproxy(id);
     }
 
     private static Map<String, Object> simpleFields(List<Field> fields, Scanner scanner) {
@@ -150,7 +194,8 @@ public class ModelCreator {
             objectMap.put(fieldName, nestedModels);
         }
         else {
-            Class<?> aClass = models.get(typeName);
+            String clearTypeName = typeName.replace("Hibernate.model.", "");
+            Class<?> aClass = models.get(clearTypeName.toLowerCase());
             objectMap.put(fieldName, ModelCreator.create((Class<T>) aClass, scanner, "save", true));
         }
 

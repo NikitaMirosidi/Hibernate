@@ -1,5 +1,7 @@
 package Hibernate.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.*;
 
 import javax.persistence.*;
@@ -11,6 +13,7 @@ import java.util.Set;
 @NoArgsConstructor
 @ToString(exclude = {"company", "projects", "skills"})
 @EqualsAndHashCode(exclude = {"company", "projects", "skills"})
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Entity
 @Table(name = "developer")
 public class Developer implements BaseModel {
@@ -34,7 +37,7 @@ public class Developer implements BaseModel {
     @Column(name = "email", unique = true)
     private String email;
 
-    @Column(name = "salary", nullable = false)
+    @Column(name = "salary")
     private int salary;
 
     @ManyToOne

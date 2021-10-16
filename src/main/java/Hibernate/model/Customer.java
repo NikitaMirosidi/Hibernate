@@ -1,5 +1,7 @@
 package Hibernate.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.*;
 
 import javax.persistence.*;
@@ -9,8 +11,9 @@ import java.util.Set;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString(exclude = {"companies", "projects"})
-@EqualsAndHashCode(exclude = {"companies", "projects"})
+@ToString(exclude = "projects")
+@EqualsAndHashCode(exclude = "projects")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Entity
 @Table(name = "customer")
 public class Customer implements BaseModel {
@@ -27,9 +30,6 @@ public class Customer implements BaseModel {
 
     @Column(name = "owner_name", nullable = false)
     private String ownerName;
-
-    @ManyToMany(mappedBy = "customers")
-    private Set<Company> companies;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Project> projects;

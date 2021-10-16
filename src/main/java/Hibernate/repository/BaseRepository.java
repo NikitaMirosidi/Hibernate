@@ -1,9 +1,11 @@
 package Hibernate.repository;
 
 import Hibernate.model.BaseModel;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public interface BaseRepository<T extends BaseModel> {
@@ -21,4 +23,6 @@ public interface BaseRepository<T extends BaseModel> {
     void delete(T model);
 
     boolean isDuplicate(String fieldName, String value);
+
+    T getByIdUnproxy(int id);
 }
